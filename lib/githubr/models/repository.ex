@@ -13,6 +13,7 @@ defmodule Githubr.Repository do
     field :forks, :integer
     field :open_issues, :integer
     field :watchers, :integer
+    field :language_key, :string
 
     timestamps()
   end
@@ -27,7 +28,8 @@ defmodule Githubr.Repository do
     :language,
     :forks,
     :open_issues,
-    :watchers
+    :watchers,
+    :language_key
   ]
 
   @doc false

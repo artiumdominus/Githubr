@@ -5,7 +5,7 @@ defmodule Githubr.Repo.Migrations.CreateRepositories do
     create table(:repositories) do
       add :name, :string
       add :full_name, :string
-      add :description, :string
+      add :description, :text
       add :url, :string
       add :size, :integer
       add :stargazers_count, :integer
@@ -13,6 +13,7 @@ defmodule Githubr.Repo.Migrations.CreateRepositories do
       add :forks, :integer
       add :open_issues, :integer
       add :watchers, :integer
+      add :language_key, :string
 
       timestamps()
     end

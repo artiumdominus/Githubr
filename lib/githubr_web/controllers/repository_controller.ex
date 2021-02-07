@@ -1,27 +1,28 @@
 defmodule GithubrWeb.RepositoryController do
   use GithubrWeb, :controller
+  require Ecto.Query
+  import Ecto.Query
 
-  alias Githubr.{Repo, GitHubClient, Language}
+  alias Githubr.{Repo, GitHubClient, Language, Repository}
 
   def index(conn, params) do
-    IO.inspect params
-
     changeset = Language.changeset(%Language{}, %{})
 
     languages = Repo.all(Language)
 
-    languages_select = languages
-    |> Enum.filter(fn l -> not l.synced end)
-    |> Enum.map(fn l -> [key: l.name, value: l.id] end)
-
-    languages_menu = languages
-    |> Enum.filter(fn l -> l.synced end)
+    {active_language, repositories} = case Map.fetch(params, "language") do
+      {:ok, language_key} ->
+        {Repo.get_by(Language, key: language_key),
+         (Repo.all from r in Repository, where: r.language_key == ^language_key)}
+      :error ->
+        {nil, []}
+    end
 
     render(conn, "index.html",
       changeset: changeset,
-      languages_select: languages_select,
-      languages_menu: languages_menu)
-
+      languages: languages,
+      active_language: active_language,
+      repositories: repositories)
   end
 
   def sync(conn, %{"language" => %{"key" => language_id}}) do
@@ -29,15 +30,17 @@ defmodule GithubrWeb.RepositoryController do
 
     case GitHubClient.get_nice_repositories language.key do
       {:ok, repositories} ->
-        repositories |> Enum.each(fn r -> Repo.insert(r) end)
+        repositories
+        |> Enum.map(fn r -> %Repository{r | language_key: language.key} end)
+        |> Enum.each(fn r -> Repo.insert(r) end)
 
         Language.changeset(language, %{synced: true}) |> Repo.update
 
-        redirect conn, to: Routes.repository_path(conn, :index)
+        redirect conn, to: Routes.repository_path(conn, :index, %{language: language.key})
       {:error, reason} ->
         conn
         |> put_flash(:error, reason)
-        |> redirect to: Routes.repository_path(conn, :index)
+        |> redirect(to: Routes.repository_path(conn, :index))
     end
   end
 end
