@@ -1,0 +1,50 @@
+<%= form_for @changeset, Routes.repository_path(@conn, :sync), [class: "ui form"], fn f -> %>
+  <div class="six wide field">
+    <label>Language</label>
+    <div class="ui action left icon input">
+      <i class="search icon"></i>
+      <%= select f, :key, @languages_select, class: "ui fluid dropdown" %>
+      <button class="ui button teal">Sync</button>
+    </div>
+  </div>
+<% end %>
+
+<div class="ui divider"></div>
+
+<div class="ui grid">
+  <div class="three wide column">
+    <div class="fluid ui vertical basic buttons">
+      <%= for language <- @languages_menu do %>
+        <button class="ui button"><%= language.name %></button>
+      <% end %>
+    </div>
+  </div>
+  <div class="one wide column"></div>
+  <%= for _ <- 1..2 do %>
+  <div class="six wide column">
+    <%= for _ <- 1..5 do %>
+      <div class="ui fluid card">
+        <div class="content">
+          <div class="header">
+            <i class="book icon"></i>
+            bitcoin / bitcoin
+          </div>
+          <div class="decription">
+            Bitcoin Core integration/staging tree<br>
+            <div class="ui grid">
+              <div class="four wide column">
+                <i class="icon outline star"></i>
+                48,554
+              </div>
+              <div class="four wide column">
+                <i class="icon code branch"></i>
+                27,309
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+  <% end %>
+</div>
