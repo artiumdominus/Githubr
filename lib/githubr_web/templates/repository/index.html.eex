@@ -14,33 +14,33 @@
 <div class="ui grid">
   <div class="three wide column">
     <div class="fluid ui vertical basic buttons">
-      <%= for language <- menu @languages do %>
-        <button class="ui <%= if language.key == @active_language.key do "active" else "" end %> button">
+      <%= for language <- menu(@languages) do %>
+        <button class="ui <%= if language.key == @active_language_key do "active" else "" end %> button">
           <%= language.name %>
         </button>
       <% end %>
     </div>
   </div>
   <div class="one wide column"></div>
-  <%= for repositories <- split @repositories do %>
+  <%= for repositories <- split(@repositories) do %>
   <div class="six wide column">
     <%= for repository <- repositories do %>
       <div class="ui fluid card">
         <div class="content">
           <div class="header">
             <i class="book icon"></i>
-            <%= repository.full_name %>
+            <%= title(repository.full_name) %>
           </div>
           <div class="decription">
-            <%= repository.description %><br>
+            <%= description(repository.description) %><br>
             <div class="ui grid">
               <div class="four wide column">
                 <i class="icon outline star"></i>
-                48,554
+                <%= format_number(repository.stargazers_count) %>
               </div>
               <div class="four wide column">
                 <i class="icon code branch"></i>
-                27,309
+                <%= format_number(repository.forks) %>
               </div>
             </div>
           </div>

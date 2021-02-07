@@ -10,9 +10,9 @@ defmodule GithubrWeb.RepositoryController do
 
     languages = Repo.all(Language)
 
-    {active_language, repositories} = case Map.fetch(params, "language") do
+    {active_language_key, repositories} = case Map.fetch(params, "language") do
       {:ok, language_key} ->
-        {Repo.get_by(Language, key: language_key),
+        {language_key,
          (Repo.all from r in Repository, where: r.language_key == ^language_key)}
       :error ->
         {nil, []}
@@ -21,7 +21,7 @@ defmodule GithubrWeb.RepositoryController do
     render(conn, "index.html",
       changeset: changeset,
       languages: languages,
-      active_language: active_language,
+      active_language_key: active_language_key,
       repositories: repositories)
   end
 
