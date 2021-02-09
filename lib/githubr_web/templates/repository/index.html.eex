@@ -4,7 +4,7 @@
     <div class="ui action left icon input">
       <i class="search icon"></i>
       <%= select f, :key, select(@languages), class: "ui fluid dropdown" %>
-      <button class="ui button teal">Sync</button>
+      <button class="ui button teal" onclick="this.classList.add('loading')">Sync</button>
     </div>
   </div>
 <% end %>
@@ -15,7 +15,8 @@
   <div class="three wide column">
     <div class="fluid ui vertical basic buttons">
       <%= for language <- menu(@languages) do %>
-        <button class="ui <%= if language.key == @active_language_key do "active" else "" end %> button">
+        <button class="ui <%= if language.key == @active_language_key do "active" else "" end %> button"
+          onclick="window.location.href = '<%= Routes.repository_path(@conn, :index, %{language: language.key}) %>'">
           <%= language.name %>
         </button>
       <% end %>
@@ -25,20 +26,22 @@
   <%= for repositories <- split(@repositories) do %>
   <div class="six wide column">
     <%= for repository <- repositories do %>
-      <div class="ui fluid card">
+      <div class="ui fluid card repo-card">
         <div class="content">
           <div class="header">
             <i class="book icon"></i>
             <%= title(repository.full_name) %>
           </div>
           <div class="decription">
-            <%= description(repository.description) %><br>
+            <div class="text">
+              <%= repository.description %><br>
+            </div>
             <div class="ui grid">
-              <div class="four wide column">
+              <div class="five wide column">
                 <i class="icon outline star"></i>
                 <%= format_number(repository.stargazers_count) %>
               </div>
-              <div class="four wide column">
+              <div class="five wide column">
                 <i class="icon code branch"></i>
                 <%= format_number(repository.forks) %>
               </div>

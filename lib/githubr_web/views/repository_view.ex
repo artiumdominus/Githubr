@@ -25,14 +25,6 @@ defmodule GithubrWeb.RepositoryView do
     |> Enum.join(" / ")
   end
 
-  defp description(description) do
-    if description == nil or String.length(description) <= 60 do
-      description
-    else
-      String.slice(description, 0, 55) <> "..."
-    end
-  end
-
   defp format_number(number) do
     if number < 1000 do
       Integer.to_string number
