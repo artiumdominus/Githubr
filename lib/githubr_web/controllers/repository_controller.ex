@@ -25,7 +25,7 @@ defmodule GithubrWeb.RepositoryController do
   def sync(conn, %{"language" => %{"key" => language_id}}) do
     language = Repo.get(Language, language_id)
 
-    case GitHubClient.get_nice_repositories language.key do
+    case GitHubClient.get_nice_repositories(language.key) do
       {:ok, repositories} ->
         repositories
         |> Enum.map(fn r -> %Repository{r | language_key: language.key} end)
