@@ -18,6 +18,7 @@ defmodule GithubrWeb.Router do
 
     get "/", RepositoryController, :index
     post "/repositories/sync", RepositoryController, :sync
+    get "/repositories/:id", RepositoryController, :show
   end
 
   # Other scopes may use custom stacks.

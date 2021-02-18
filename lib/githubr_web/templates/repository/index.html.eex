@@ -1,55 +1,31 @@
-<%= form_for @changeset, Routes.repository_path(@conn, :sync), [class: "ui form"], fn f -> %>
-  <div class="six wide field">
-    <label>Language</label>
-    <div class="ui action left icon input">
-      <i class="search icon"></i>
-      <%= select f, :key, select(@languages), class: "ui fluid dropdown" %>
-      <button class="ui button teal" onclick="this.classList.add('loading')">Sync</button>
-    </div>
-  </div>
-<% end %>
-
-<div class="ui divider"></div>
-
-<div class="ui grid">
-  <div class="three wide column">
-    <div class="fluid ui vertical basic buttons">
-      <%= for language <- menu(@languages) do %>
-        <button class="ui <%= if language.key == @active_language_key do "active" else "" end %> button"
-          onclick="window.location.href = '<%= Routes.repository_path(@conn, :index, %{language: language.key}) %>'">
-          <%= language.name %>
-        </button>
-      <% end %>
-    </div>
-  </div>
-  <div class="one wide column"></div>
-  <%= for repositories <- split(@repositories) do %>
-  <div class="six wide column">
-    <%= for repository <- repositories do %>
-      <div class="ui fluid card repo-card">
-        <div class="content">
-          <div class="header">
-            <i class="book icon"></i>
-            <%= title(repository.full_name) %>
+<%= for repositories <- split(@repositories) do %>
+<div class="six wide column">
+  <%= for repository <- repositories do %>
+    <div class="ui fluid card repo-card"
+      onclick="window.location.href = '<%= Routes.repository_path(@conn, :show, repository.id) %>'"
+    >
+      <div class="content">
+        <div class="header">
+          <i class="book icon"></i>
+          <%= title(repository.full_name) %>
+        </div>
+        <div class="decription">
+          <div class="text">
+            <%= repository.description %><br>
           </div>
-          <div class="decription">
-            <div class="text">
-              <%= repository.description %><br>
+          <div class="ui grid">
+            <div class="five wide column">
+              <i class="icon outline star"></i>
+              <%= format_number(repository.stargazers_count) %>
             </div>
-            <div class="ui grid">
-              <div class="five wide column">
-                <i class="icon outline star"></i>
-                <%= format_number(repository.stargazers_count) %>
-              </div>
-              <div class="five wide column">
-                <i class="icon code branch"></i>
-                <%= format_number(repository.forks) %>
-              </div>
+            <div class="five wide column">
+              <i class="icon code branch"></i>
+              <%= format_number(repository.forks) %>
             </div>
           </div>
         </div>
       </div>
-    <% end %>
-  </div>
+    </div>
   <% end %>
 </div>
+<% end %>

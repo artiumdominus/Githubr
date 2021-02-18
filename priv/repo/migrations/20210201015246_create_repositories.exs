@@ -7,6 +7,7 @@ defmodule Githubr.Repo.Migrations.CreateRepositories do
       add :full_name, :string
       add :description, :text
       add :url, :string
+      add :html_url, :string
       add :size, :integer
       add :stargazers_count, :integer
       add :language, :string

@@ -16,6 +16,10 @@
       crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
     <style>
+      .repo-card {
+        cursor: pointer;
+      }
+
       .repo-card .header {
         overflow: hidden;
         text-overflow: ellipsis;
@@ -32,6 +36,14 @@
         -webkit-box-orient: vertical;
         height: 2.5rem;
       }
+
+      .full-repo-card {
+        height: 20rem;
+      }
+
+      .full-repo-card .text {
+        height: 10rem;
+      }
     </style>
   </head>
   <body>
@@ -40,12 +52,48 @@
         <i class="big phoenix framework icon"></i>
         Githubr
       </div>
+      <div class="right menu">
+        <%= if message = get_flash(@conn, :info) do %>
+          <div class="ui info message">
+            <p class="alert alert-info" role="alert"><%= message%></p>
+          </div>
+        <% end %>
+        <%= if message = get_flash(@conn, :error) do%>
+          <div class="ui error message">
+            <p class="alert alert-danger" role="alert"><%= message %></p>
+          </div>
+      <% end %>
+      </div>
     </div>
 
     <main role="main" class="ui container">
-      <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
-      <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
-      <%= @inner_content %>
+      <%= form_for @changeset, Routes.repository_path(@conn, :sync), [class: "ui form"], fn f -> %>
+        <div class="six wide field">
+          <label>Language</label>
+          <div class="ui action left icon input">
+            <i class="search icon"></i>
+            <%= select f, :key, select(@languages), class: "ui fluid dropdown" %>
+            <button class="ui button teal" onclick="this.classList.add('loading')">Sync</button>
+          </div>
+        </div>
+      <% end %>
+
+      <div class="ui divider"></div>
+
+      <div class="ui grid">
+        <div class="three wide column">
+          <div class="fluid ui vertical basic buttons">
+            <%= for language <- menu(@languages) do %>
+              <button class="ui <%= if language.key == @active_language_key do "active" else "" end %> button"
+                onclick="window.location.href = '<%= Routes.repository_path(@conn, :index, %{language: language.key}) %>'">
+                <%= language.name %>
+              </button>
+            <% end %>
+          </div>
+        </div>
+        <div class="one wide column"></div>
+        <%= @inner_content %>
+      </div>
     </main>
   </body>
 </html>

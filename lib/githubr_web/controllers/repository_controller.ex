@@ -6,9 +6,6 @@ defmodule GithubrWeb.RepositoryController do
   alias Githubr.{Repo, GitHubClient, Language, Repository}
 
   def index(conn, params) do
-    changeset = Language.changeset(%Language{}, %{})
-
-    languages = Repo.all(Language)
 
     {active_language_key, repositories} = case Map.fetch(params, "language") do
       {:ok, language_key} ->
@@ -19,8 +16,8 @@ defmodule GithubrWeb.RepositoryController do
     end
 
     render(conn, "index.html",
-      changeset: changeset,
-      languages: languages,
+      changeset: Language.changeset(%Language{}, %{}),
+      languages: Repo.all(Language),
       active_language_key: active_language_key,
       repositories: repositories)
   end
@@ -41,6 +38,22 @@ defmodule GithubrWeb.RepositoryController do
         conn
         |> put_flash(:error, reason)
         |> redirect(to: Routes.repository_path(conn, :index))
+    end
+  end
+
+  def show(conn, %{"id" => repository_id}) do
+    case Repo.get(Repository, repository_id) do
+      nil ->
+        conn
+        |> put_flash(:error, "Repository not found")
+        |> redirect(to: Routes.repository_path(conn, :index))
+      repository ->
+        render(conn, "show.html",
+          changeset: Language.changeset(%Language{}, %{}),
+          languages: Repo.all(Language),
+          active_language_key: repository.language_key,
+          repository: repository)
+    
     end
   end
 end

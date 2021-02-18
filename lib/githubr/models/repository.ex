@@ -7,6 +7,7 @@ defmodule Githubr.Repository do
     field :full_name, :string
     field :description, :string
     field :url, :string
+    field :html_url, :string
     field :size, :integer
     field :stargazers_count, :integer
     field :language, :string
@@ -23,6 +24,7 @@ defmodule Githubr.Repository do
     :full_name,
     :description,
     :url,
+    :html_url,
     :size,
     :stargazers_count,
     :language,

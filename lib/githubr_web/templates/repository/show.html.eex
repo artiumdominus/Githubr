@@ -1,0 +1,40 @@
+<div class="twelve wide column">
+  <div class="ui fluid card full-repo-card">
+    <div class="content">
+      <div class="header">
+        <i class="book icon"></i>
+        <%= link title(@repository.full_name), to: @repository.html_url, target: "_blank" %> 
+      </div>
+      <div class="description">
+        <div class="text">
+          <%= @repository.description %>
+        </div>
+        <div class="ui grid">
+          <div class="four wide column">
+            <i class="icon outline star"></i>
+            Stars
+            <%= format_number(@repository.stargazers_count) %>
+            <br><br>
+            <i class="icon code branch"></i>
+            Forks
+            <%= format_number(@repository.forks) %>
+          </div>
+          <div class="four wide column">
+            <i class="icon exclamation circle"></i>
+            Issues
+            <%= format_number(@repository.open_issues) %>
+            <br><br>
+            <i class="icon eye"></i>
+            Watchers
+            <%= format_number(@repository.watchers) %>
+          </div>
+          <div class="four wide column">
+            Size: <%= format_number(@repository.size) %>
+            <br><br>
+            Language › <%= @repository.language %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
